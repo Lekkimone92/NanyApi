@@ -15,7 +15,15 @@ class CreateUsersAreasTable extends Migration
     {
         Schema::create('users_areas', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('user_id')->unsigned();
+            $table->integer('area_id')->unsigned();
+            $table->string('statut');
             $table->timestamps();
+        });
+
+        Schema::table('users_areas', function($table) {
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('area_id')->references('id')->on('areas');
         });
     }
 
