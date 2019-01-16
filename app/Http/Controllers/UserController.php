@@ -9,6 +9,8 @@ use Laravel\Passport\Client;
 
 class UserController extends Controller
 {
+    use IssueTokenTrait;
+
     private $client;
 
    public function __construct()
@@ -27,25 +29,20 @@ class UserController extends Controller
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+
     public function store(Request $request)
     {
         $this->validate($request,[
             'nom' => 'required',
             'prenom' => 'required',
             'email' => 'required|email|unique:users',
-            'password' => 'required|min:6|confirmed',
+            'password' => 'required|min:6',//|confirmed
             'adresse' => 'required',
             'tel' => 'required',
             'role_id' => 'required'
         ]);
 
-        $user = User::create([
+        User::create([
             'nom' => $request->input('nom'),
             'prenom' => $request->input('prenom'),
             'email' => $request->input('email'),
@@ -55,20 +52,7 @@ class UserController extends Controller
             'role_id' => $request->input('role_id'),
         ]);
 
-        $params = [
-            'grant_type' => 'password',
-            'client_id' => $this->client->id,
-            'client_secret' => $this->client->secret,
-            'username' => $request->input('email'),
-            'password' => $request->input('password'),
-            'scope' => '*',
-        ];
-
-        $request->request->add($params);
-
-        $proxy = Request::create('oauth/token', 'POST');
-
-        return Route::dispatch($proxy);
+        return $this->issueToken($request, 'password');
     }
 
     /**
