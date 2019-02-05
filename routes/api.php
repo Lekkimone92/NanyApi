@@ -14,8 +14,10 @@ Route::middleware('auth:api')->group(function () {
 });
 
 
-Route::apiResource('/users', 'UserController');
+//Route::apiResource('/users', 'UserController');
+
+Route::post('users/register', 'UserController@register');
 
 
-Route::post('login', 'LoginController@login');
-Route::post('refresh', 'LoginController@refresh');
+Route::post('users/login', 'LoginController@login');
+Route::post('users/refresh', 'LoginController@refresh');

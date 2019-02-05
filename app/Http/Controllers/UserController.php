@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Model\Role;
 use App\Model\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -30,7 +31,7 @@ class UserController extends Controller
     }
 
 
-    public function store(Request $request)
+    public function register(Request $request)
     {
         $this->validate($request,[
             'nom' => 'required',
@@ -39,7 +40,7 @@ class UserController extends Controller
             'password' => 'required|min:6',//|confirmed
             'adresse' => 'required',
             'tel' => 'required',
-            'role_id' => 'required'
+            //'role_id' => 'required'
         ]);
 
         User::create([
@@ -49,7 +50,7 @@ class UserController extends Controller
             'password' => bcrypt($request->input('password')),
             'adresse' => $request->input('adresse'),
             'tel' => $request->input('tel'),
-            'role_id' => $request->input('role_id'),
+            'role_id' => Role::find(1)->id,//$request->input('role_id'),
         ]);
 
         return $this->issueToken($request, 'password');
