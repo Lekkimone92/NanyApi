@@ -63,6 +63,11 @@ return [
             'bucket' => env('AWS_BUCKET'),
             'url' => env('AWS_URL'),
         ],
+        'mes_images' => [
+            'driver' => 'local',
+            'root'   => public_path() . '/mes_images',
+            'visibility' => 'public',
+        ],
 
     ],
 
