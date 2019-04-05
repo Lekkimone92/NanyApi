@@ -14,7 +14,12 @@ class Area extends Model
      * @var array
      */
     protected $fillable = [
-        'label','adresse', 'category', 'location_id', 'child_id',
+        'label','adresse', 'category', 'location_id', 'child_id', 'from', 'to'
+    ];
+
+    protected $casts = [
+        'from' => 'hh:mm',
+        'to' => 'hh:mm'
     ];
 
     public function location(){

@@ -2,14 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Model\Location;
 use App\Model\Role;
 use App\Model\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Input;
-use Illuminate\Support\Facades\Response;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Passport\Client;
 
@@ -58,6 +54,9 @@ class UserController extends Controller
 
     }
 
+    public function getChild(){
+       return \Auth::user();
+    }
 
     public function register(Request $request)
     {
@@ -119,21 +118,13 @@ class UserController extends Controller
         $user =User::find($id);
 
         $path = Storage::disk('local')->path($user->image_url);
-        //$file = Storage::download(public_path()."/storage/".$user->image_url);
-        //dd($path);
-        //$file = new File($path);
+
         return [
             'image' => file_get_contents($path)
         ];
     }
 
     public function addChildPhoto(Request $request){
-//        $this->validate($request, [
-//            'image_url' => 'required|image|mimes:jpeg,png,jpg|max:2048',
-//            'id' => 'required',
-//        ]);
-
-        //$path = "";
 
         $user = User::findOrFail($request->input('id'));
 
@@ -150,6 +141,31 @@ class UserController extends Controller
         User::where('id',$user->id)->update(['image_url' => $filename]);
 
         return  User::find($user->id, ['id', 'image_url']);
+    }
+
+
+    public function addChildLocation(Request $request){
+        $this->validate($request, [
+            'longitude' => 'required',
+            'latitude' => 'required'
+        ]);
+
+        $location = Location::create([
+            'longitude' => $request->input('longitude'),
+            'latitude' => $request->input('latitude')
+        ]);
+
+        $user = \Auth::user();
+
+        $location->users()->attach($user->id);
+
+        return $location;
+    }
+
+    public function getChildLastLocation($childId){
+       $user = User::findOrFail($childId);
+
+       return $user->locations()->first();
     }
 
     /**

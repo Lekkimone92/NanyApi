@@ -21,4 +21,8 @@ class Location extends Model
     public function area(){
         return $this->hasOne('App\Model\Area');
     }
+
+    public function users(){
+        return $this->belongsToMany( 'App\Model\User', 'locations_users', 'location_id', 'user_id' );
+    }
 }

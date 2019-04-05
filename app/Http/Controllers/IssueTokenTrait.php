@@ -22,8 +22,10 @@ trait IssueTokenTrait
         ];
 
         $request->request->add($params);
-
-        $proxy = Request::create('oauth/token', 'POST');
+        if ($grantType == "password")
+            $proxy = Request::create('api/oauth/token', 'POST');
+        else
+            $proxy = Request::create('oauth/token', 'POST');
 
         return Route::dispatch($proxy);
     }

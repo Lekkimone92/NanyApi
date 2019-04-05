@@ -45,4 +45,8 @@ class User extends Authenticatable
     public function user_areas(){
         return $this->hasMany('App\Model\UsersArea', 'users_areas');
     }
+
+    public function locations(){
+        return $this->belongsToMany( 'App\Model\Location', 'locations_users', 'user_id', 'location_id' )->latest();
+    }
 }

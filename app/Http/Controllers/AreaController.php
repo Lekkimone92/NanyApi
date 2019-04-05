@@ -48,6 +48,8 @@ class AreaController extends Controller
             'longitude' => 'required',
             'latitude' => 'required',
             'child_id' => 'required|integer',
+            'from' => 'required|date_format:H:i',
+            'to' => 'required|date_format:H:i|after:from',
         ]);
         //Creation des coordonnées géographiques
         $location = Location::create([
@@ -61,7 +63,10 @@ class AreaController extends Controller
             'adresse' => $request->input('adresse'),
             'category' => $request->input('category'),
             'location_id' => $location->id,
+            'from' => $request->input('from'),
+            'to' => $request->input('to'),
         ]);
+
         // Lier l'enfant et le lieu
         UsersArea::create([
             'user_id' => $request->input('child_id'),
